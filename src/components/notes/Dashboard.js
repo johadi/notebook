@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { MenuIcon } from '../../common';
+import { getNotes } from "../../actions";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-export class Dashboard extends Component {
+class DashboardContainer extends Component {
 
   static navigationOptions = ({navigation}) => {
     return {
@@ -11,8 +14,12 @@ export class Dashboard extends Component {
     }
   };
 
+  componentDidMount() {
+    this.props.getNotes();
+  }
+
   navigateToViewNoteScreen = (note) => {
-    this.props.navigation.navigate('ViewNote');
+    this.props.navigation.navigate('ViewNote', { note });
     // const resetAction = NavigationActions.reset({
     //   index: 0,
     //   actions: [NavigationActions.navigate({ routeName: 'ViewNote' })],
@@ -35,40 +42,27 @@ export class Dashboard extends Component {
           </View>
         </View>
 
-        <TouchableHighlight onPress={() => this.navigateToViewNoteScreen('good')}>
-          <View style={styles.notesSection}>
-            <View style={styles.singleNoteSection}>
-              <View style={styles.noteHeaderSection}>
-                <Text style={styles.noteHeaderText}>Miss You Already</Text>
-                <Image style={styles.indicator} source={require('../../../assets/images/indicator3x.png')} />
-              </View>
-              <Text style={styles.noteText}>
-                I came to suddenly realized how the week went by with every incident that happen that day...
-              </Text>
-              <View style={styles.noteFooterSection}>
-                <Text style={styles.footerText}>school</Text>
-                <Text style={styles.noteTime}>9:15 AM</Text>
-              </View>
-            </View>
-          </View>
-        </TouchableHighlight>
-
-        <View style={styles.notesSection}>
-          <View style={styles.singleNoteSection}>
-            <View style={styles.noteHeaderSection}>
-              <Text style={styles.noteHeaderText}>Miss You Already</Text>
-              <Image style={styles.indicator} source={require('../../../assets/images/indicator3x.png')} />
-            </View>
-            <Text style={styles.noteText}>
-              I came to suddenly realized how the week went by with every incident that happen that day...
-            </Text>
-            <View style={styles.noteFooterSection}>
-              <Text style={styles.footerText}>school</Text>
-              <Text style={styles.noteTime}>9:15 AM</Text>
-            </View>
-          </View>
-        </View>
-
+        <ScrollView>
+          {
+            this.props.noteState.notes.map(note => (
+              <TouchableHighlight key={note.id} onPress={() => this.navigateToViewNoteScreen(note)}>
+                <View style={styles.notesSection}>
+                  <View style={styles.singleNoteSection}>
+                    <View style={styles.noteHeaderSection}>
+                      <Text style={styles.noteHeaderText}>{note.title}</Text>
+                      <Image style={styles.indicator} source={require('../../../assets/images/indicator3x.png')} />
+                    </View>
+                    <Text style={styles.noteText}>{note.body}</Text>
+                    <View style={styles.noteFooterSection}>
+                      <Text style={styles.footerText}>{note.category}</Text>
+                      <Text style={styles.noteTime}>9:15 AM</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableHighlight>
+            ))
+          }
+        </ScrollView>
         <TouchableOpacity onPress={this.navigateToAddNoteScreen} style={styles.addNoteIcon}>
           <Text style={styles.addNoteIconText}>+</Text>
         </TouchableOpacity>
@@ -77,6 +71,15 @@ export class Dashboard extends Component {
     )
   }
 }
+
+const mapStateToProps = ({noteState}) => {
+  return { noteState }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ getNotes }, dispatch);
+};
+export const Dashboard = connect(mapStateToProps, mapDispatchToProps)(DashboardContainer);
 
 const styles = StyleSheet.create({
   container: {
