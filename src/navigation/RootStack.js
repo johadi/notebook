@@ -8,14 +8,27 @@ import {
   EditNote,
 } from "../components/notes";
 import {
-  Profile,
-  Logout
+  Profile
 } from '../components/user'
 import {
-  Login,
   Register,
-  RecoverPassword
-} from '../components/auth'
+  Logout,
+  RecoverPassword,
+  Login,
+} from '../components/auth';
+import { AppEntry } from '../components/appEntry';
+
+const AppEntryStack = StackNavigator({
+  AppEntry: {
+    screen: AppEntry
+  },
+}, {
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: '#9013FE',
+    }
+  }
+});
 
 const AuthStack = StackNavigator({
   Login: {
@@ -102,8 +115,7 @@ const AppDrawer = DrawerNavigator({
 
 
 export const RootStack = SwitchNavigator({
+  Entry: AppEntryStack,
   Auth: AuthStack,
-  // App: AppStack,
-  // AppT: AppTabs,
   App: AppDrawer
 });
