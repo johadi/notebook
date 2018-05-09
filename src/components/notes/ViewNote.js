@@ -23,6 +23,9 @@ export class ViewNote extends Component {
     this.props.navigation.setParams({ handleDeleteNote: this.handleDeleteNote })
   }
 
+  /**
+   * Delete the note shown on this screen
+   */
   handleDeleteNote = () => {
     Alert.alert(
       'DELETE',
@@ -35,37 +38,36 @@ export class ViewNote extends Component {
     );
   };
 
+  /**
+   * Resets the note displayed on this screen after it was changed
+   * @param note
+   */
+  resetViewNoteScreenParam = (note) => {
+    this.props.navigation.setParams({ note });
+  };
+
+  /**
+   * Handles the navigation to EditNote screen
+   */
   navigateToEditNote = () => {
+    const { note } = this.props.navigation.state.params;
     this.props.navigation.navigate(
-      'EditNote',
-      {
-        note: {
-          title: 'Traveling',
-          body: 'I love traveling across Africa',
-          category: 'travel'
-        }
-      }
-    );
+      'EditNote', { note, resetViewNoteScreenParam: this.resetViewNoteScreenParam }
+      );
   };
 
   render() {
+    const { note } = this.props.navigation.state.params;
     return (
       <View style={styles.container}>
         <View style={styles.noteHeader}>
-          <Text style={styles.noteLabel}>School - </Text>
+          <Text style={styles.noteLabel}>{note.category} - </Text>
           <Text style={styles.noteDate}>15th April, 2018</Text>
         </View>
         <View style={styles.divider}/>
         <View>
-          <Text style={styles.noteHeaderText}>Miss You Already</Text>
-          <Text>
-            What I don’t know is what you know , I really don’t care.
-            Many make such mistake of thinking hard that people care a lot where as in reality,
-            we don’t. we don’t give a damn. Is all up to you on what you take and dont take.
-            What I don’t know is what you know , I really don’t care.
-            Many make such mistake of thinking hard that people care a lot where as in reality,
-            we don’t. we don’t give a damn. Is all up to you on what you take and dont take.
-          </Text>
+          <Text style={styles.noteHeaderText}>{note.title}</Text>
+          <Text>{note.body}</Text>
         </View>
         <TouchableOpacity
           style={styles.editIconSection}
