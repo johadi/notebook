@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import {
   authReducer, userReducer, noteReducer
 } from '../reducers';
@@ -11,4 +12,4 @@ export default createStore(
     noteState: noteReducer
   }),
   {},
-  applyMiddleware(thunk));
+  applyMiddleware(logger, thunk));

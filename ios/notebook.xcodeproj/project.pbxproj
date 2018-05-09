@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00B10CBFC50D497A9CA71592 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27699BAC1CB647D289301DBD /* Entypo.ttf */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -62,6 +61,7 @@
 		F4171DCE208F77E500F87433 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4171DC3208F77E500F87433 /* EvilIcons.ttf */; };
 		F4171DCF208F77E500F87433 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4171DC4208F77E500F87433 /* SimpleLineIcons.ttf */; };
 		F4171DD0208F77E500F87433 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4171DC5208F77E500F87433 /* MaterialIcons.ttf */; };
+		F4B804582094DBC100058359 /* libToolTipMenu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B804552094DA5E00058359 /* libToolTipMenu.a */; };
 		FF536DA801A748DCAC83F80C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9FCCCF60B7724D40B0AD1D1E /* Ionicons.ttf */; };
 /* End PBXBuildFile section */
 
@@ -353,6 +353,20 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
+		F4B804542094DA5E00058359 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4B804282094DA5E00058359 /* ToolTipMenu.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4681C0211B05271A004D67D4;
+			remoteInfo = ToolTipMenu;
+		};
+		F4B804562094DA5E00058359 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4B804282094DA5E00058359 /* ToolTipMenu.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4681C02C1B05271A004D67D4;
+			remoteInfo = ToolTipMenuTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -408,6 +422,7 @@
 		F4171DC3208F77E500F87433 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		F4171DC4208F77E500F87433 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		F4171DC5208F77E500F87433 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		F4B804282094DA5E00058359 /* ToolTipMenu.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ToolTipMenu.xcodeproj; path = "../node_modules/react-native-tooltip/ToolTipMenu.xcodeproj"; sourceTree = "<group>"; };
 		FCA34C575CCF49D88F2566A0 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -424,6 +439,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4B804582094DBC100058359 /* libToolTipMenu.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -631,6 +647,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F4B804282094DA5E00058359 /* ToolTipMenu.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -736,6 +753,15 @@
 			isa = PBXGroup;
 			children = (
 				F4171E08208F784B00F87433 /* libRNVectorIcons.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4B804292094DA5E00058359 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4B804552094DA5E00058359 /* libToolTipMenu.a */,
+				F4B804572094DA5E00058359 /* ToolTipMenuTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -906,6 +932,10 @@
 				{
 					ProductGroup = F4171E04208F784B00F87433 /* Products */;
 					ProjectRef = B652D7122C6549E9BF595F99 /* RNVectorIcons.xcodeproj */;
+				},
+				{
+					ProductGroup = F4B804292094DA5E00058359 /* Products */;
+					ProjectRef = F4B804282094DA5E00058359 /* ToolTipMenu.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1190,6 +1220,20 @@
 			fileType = archive.ar;
 			path = libRNVectorIcons.a;
 			remoteRef = F4171E07208F784B00F87433 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4B804552094DA5E00058359 /* libToolTipMenu.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libToolTipMenu.a;
+			remoteRef = F4B804542094DA5E00058359 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4B804572094DA5E00058359 /* ToolTipMenuTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ToolTipMenuTests.xctest;
+			remoteRef = F4B804562094DA5E00058359 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
