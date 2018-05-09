@@ -1,26 +1,157 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { Component, createRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
+import PropTypes from 'prop-types';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import ToolTip from 'react-native-tooltip';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Input, Button } from '../../common/index';
-import {getUsers} from '../../actions';
+import { Input, Button } from '../../common';
+import {clearLoginErrors, login, authenticate} from '../../actions';
+import { setAuthorizationHeader } from '../../environment';
 
 class LoginContainer extends Component {
+  state = {
+    userCredentials: {
+      email: '',
+      password: ''
+    },
+    loginStatus: null
+  };
+
+  static propTypes = {
+    authState: PropTypes.object,
+    navigation: PropTypes.object,
+    clearLoginErrors: PropTypes.func,
+    login: PropTypes.func
+  };
+
+  tooltips = {
+    email: createRef(),
+    password: createRef()
+  };
+
+  async componentDidUpdate() {
+    if (this.props.authState.isAuthenticated && await setAuthorizationHeader()) {
+      this.props.navigation.navigate('App');
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.clearLoginErrors();
+  }
+
+  handleLogin = () => {
+    this.props.login(this.state.userCredentials);
+  };
+
+  /**
+   * Handles change of text input
+   * @param inputName - the input field name
+   * @param inputValue - the input field value
+   */
+  handleChangeText = (inputName, inputValue) => {
+    const userCredentials = this.state.userCredentials;
+    userCredentials[inputName] = inputValue;
+    this.setState({userCredentials});
+  };
+
+  /**
+   * Shows the loader that indicates registration is in process
+   */
+  showLoader() {
+    return (
+      <ActivityIndicator size={0} color={'#fff'}/>
+    );
+  }
+
+  /**
+   * Shows login failure messages such as "user not found"
+   * @param failureMessage
+   */
+  showLoginFailureMessage(failureMessage) {
+    failureMessage && Alert.alert(
+      'Login Failed',
+      failureMessage,
+      [{text: 'OK', onPress: () => this.props.clearLoginErrors()}]
+    );
+  }
+
+  /**
+   * Shows validation error messages like "email field is required"
+   * @param errorMessage - the validation error messages
+   * @return {null|jsx}
+   */
+  showValidationErrorMessage = (errorMessage) => {
+    return errorMessage && Platform.OS === 'android' ?
+      (<Text style={styles.validationErrorText}>{errorMessage}</Text>) : null;
+  };
+
+  /**
+   * Shows the error icon tooltip text
+   * @param iconCategoryName
+   */
+  showErrorIconTooltipText(iconCategoryName) {
+    this.tooltips[iconCategoryName].current.showMenu();
+  }
+
+  /**
+   * Shows the validation error icon
+   * @param iconStyle - the style of the error icon as supplied our callback
+   * @param errorMessage - the tooltip error message
+   * @param iconCategoryName - the category name of the icon
+   * @return {jsx}
+   */
+  showErrorIcon(iconStyle, errorMessage, iconCategoryName) {
+    return (
+      <TouchableOpacity onPress = {() => this.showErrorIconTooltipText(iconCategoryName)}>
+        <ToolTip
+          ref={this.tooltips[iconCategoryName]}
+          actions={[
+            {text: errorMessage}
+          ]}
+        >
+          <FontAwesomeIcon style={iconStyle} color={'red'} size={20} name={'exclamation-circle'}/>
+        </ToolTip>
+      </TouchableOpacity>
+    )
+  }
+
+  /**
+   * Navigates user to a specific route
+   * @param routeName
+   */
   handleNavigation = (routeName) => {
     this.props.navigation.navigate(routeName);
   };
 
-  handleLogin = () => {
-    this.props.getUsers('Jamiu');
-    // this.props.navigation.navigate('App');
-  };
-
   render() {
+    const {
+      loginIsLoading,
+      loginValidationErrors,
+      loginFailure
+    } = this.props.authState;
+
     return (
       <View style={styles.container}>
-        <Text style={styles.headerText}>Notebook {this.props.authState.name}</Text>
-        <Input placeholder={'Username or Email'}/>
-        <Input placeholder={'Password'}/>
-        <Button onPress={this.handleLogin}>Login</Button>
+        <Text style={styles.headerText}>Notebook</Text>
+        {this.showLoginFailureMessage(loginFailure)}
+        <Input
+          placeholder={'Email'}
+          icon={loginValidationErrors['email'] ?
+            iconStyle => this.showErrorIcon(iconStyle,
+              loginValidationErrors['email'][0], 'email') : null}
+          onChangeText={value => this.handleChangeText('email', value)}
+        />
+        {this.showValidationErrorMessage(loginValidationErrors['email'])}
+        <Input
+          placeholder={'Password'}
+          icon={loginValidationErrors['password'] ?
+            iconStyle => this.showErrorIcon(iconStyle,
+              loginValidationErrors['password'][0], 'password') : null}
+          onChangeText={value => this.handleChangeText('password', value)}
+        />
+        {this.showValidationErrorMessage(loginValidationErrors['password'])}
+        <Button onPress={this.handleLogin}>{loginIsLoading ? this.showLoader() : 'Login'}</Button>
         <View style={styles.forgotPasswordWrapper}>
           <Text
             onPress={() => this.handleNavigation('RecoverPassword')}
@@ -34,22 +165,16 @@ class LoginContainer extends Component {
           </Text>
         </View>
       </View>
-    )
+    );
   }
 }
 
 const mapStateToProps = ({authState}) => {
-  return {
-    authState
-  }
+  return { authState }
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    getUsers: (userDetails) => {
-      dispatch(getUsers(userDetails))
-    }
-  }
+  return bindActionCreators({ clearLoginErrors, login, authenticate }, dispatch);
 };
 export const Login = connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
 
@@ -76,4 +201,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14
   },
+  validationErrorText: {
+    textAlign: 'center',
+    color: 'red',
+    marginBottom: 5
+  }
 });

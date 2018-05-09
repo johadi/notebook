@@ -3,10 +3,11 @@ import { TextInput, StyleSheet, Picker, KeyboardAvoidingView, ScrollView, View }
 
 export const CreateNote = (props) => {
   const {
-    handlePickerValueChange,
-    handleTextInputChange,
-    titleText,
+    handleTitleInputChange,
+    handleBodyInputChange,
     pickerSelectedValue,
+    handlePickerValueChange,
+    titleText,
     bodyText,
   } = props;
 
@@ -15,15 +16,15 @@ export const CreateNote = (props) => {
       <ScrollView contentContainerStyle={styles.container}>
         <View>
           <TextInput
-            onChangeText = {handleTextInputChange}
+            onChangeText = {handleTitleInputChange}
             value={titleText}
-            style={[styles.input, {borderBottomWidth: 2,borderColor: '#D8D8D8'}]}
+            style={[styles.input, styles.titleInput]}
             multiline={true}
             autoFocus={true}
             autoCorrect={false}
             placeholder={'Type your note title'}/>
           <TextInput
-            onChangeText = {handleTextInputChange}
+            onChangeText = {handleBodyInputChange}
             value={bodyText}
             style={styles.input}
             multiline={true}
@@ -71,5 +72,9 @@ const styles = StyleSheet.create({
   },
   pickerItem: {
     fontSize: 16
+  },
+  titleInput: {
+    borderBottomWidth: 2,
+    borderColor: '#D8D8D8'
   }
 });

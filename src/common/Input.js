@@ -1,25 +1,37 @@
 import React from 'react';
-import {TextInput} from 'react-native';
+import {TextInput, View} from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
-const Input = ({style, ...rest}) => {
+const Input = ({style,icon, ...rest}) => {
   return (
-    <TextInput autoCorrect={false} style={[styles.input, style]} {...rest}/>
+    <View style={styles.inputWrapper}>
+      <TextInput autoCorrect={false} style={[styles.input, style]} {...rest}/>
+      {icon ? icon(styles.iconStyle) : null}
+    </View>
   )
 };
 
 const styles = {
-  input: {
+  inputWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderStyle: 'solid',
     borderWidth: 2,
-    padding: 5,
     marginRight: 15,
     marginLeft: 15,
-    marginBottom: 6,
-    marginTop: 6,
+    marginVertical: 6,
     borderColor: '#d9d9d9',
     borderRadius: 6,
     height: 40,
-    paddingLeft: 10
+  },
+  input: {
+    flex: 1,
+    padding: 5,
+    paddingLeft: 10,
+  },
+  iconStyle: {
+    padding: 2,
   }
 };
 
