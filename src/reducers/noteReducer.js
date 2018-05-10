@@ -7,8 +7,10 @@ const initialState = {
   saveNoteFailure: null,
   updateNoteValidationError: null,
   updatedNote: null,
-  canScrollTopAfterNoteUpdate: false,
-  updateNoteFailure: null
+  scrollToTopStatus: false,
+  updateNoteFailure: null,
+  deletedNoteStatus: false,
+  deleteNoteError: null,
 };
 
 export const noteReducer = (state = initialState, action) => {
@@ -57,7 +59,7 @@ export const noteReducer = (state = initialState, action) => {
       return {
         ...state,
         updatedNote: action.payload.updatedNote,
-        canScrollTopAfterNoteUpdate: action.payload.canScrollTop,
+        scrollToTopStatus: action.payload.scrollToTopStatus,
         updateNoteValidationError: null
       };
     case actionTypes.UPDATE_NOTE_FAILURE:
@@ -75,10 +77,28 @@ export const noteReducer = (state = initialState, action) => {
     case actionTypes.CLEAR_UPDATED_NOTE:
       return {
         ...state,
-        canScrollTopAfterNoteUpdate: false,
+        scrollToTopStatus: false,
         updatedNote: null,
         updateNoteValidationError: null,
         updateNoteFailure: null
+      };
+
+    case actionTypes.DELETE_NOTE_SUCCESS:
+      return {
+        ...state,
+        deletedNoteStatus: true,
+        deleteNoteError: null
+      };
+    case actionTypes.DELETE_NOTE_FAILURE:
+      return {
+        ...state,
+        deleteNoteError: action.payload
+      };
+    case actionTypes.RESET_DELETE_NOTE_STATUS:
+      return {
+        ...state,
+        deletedNoteStatus: false,
+        deleteNoteError: null,
       };
     default:
       return state;

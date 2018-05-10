@@ -49,7 +49,7 @@ class EditNoteContainer extends Component {
       updateNoteValidationError,
       updateNoteFailure,
       updatedNote,
-      canScrollTopAfterNoteUpdate
+      scrollToTopStatus
     } = this.props.noteState;
 
     if (updateNoteValidationError) {
@@ -78,7 +78,7 @@ class EditNoteContainer extends Component {
 
     if(updatedNote) {
       this.props.navigation.state.params
-        .resetViewNoteScreenParam(updatedNote, canScrollTopAfterNoteUpdate);
+        .resetViewNoteScreenParam(updatedNote, scrollToTopStatus);
       this.props.navigation.goBack();
     }
   }

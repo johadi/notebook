@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import moment from 'moment';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import { deleteNote, resetDeleteNoteStatus } from '../../actions';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
-export class ViewNote extends Component {
+class ViewNoteContainer extends Component {
 
   static navigationOptions = ({navigation}) => {
     const { handleDeleteNote } = navigation.state.params || {};
@@ -24,16 +27,32 @@ export class ViewNote extends Component {
     this.props.navigation.setParams({ handleDeleteNote: this.handleDeleteNote })
   }
 
+  componentDidUpdate() {
+    const { deleteNoteError, deletedNoteStatus } = this.props.noteState;
+    if (deleteNoteError) {
+      Alert.alert('Delete Note failed', deleteNoteError);
+      this.props.resetDeleteNoteStatus();
+      return;
+    }
+
+    if(deletedNoteStatus) {
+      this.props.resetDeleteNoteStatus();
+      this.props.navigation.goBack();
+    }
+
+  }
+
   /**
    * Delete the note shown on this screen
    */
   handleDeleteNote = () => {
+    const { noteState, deleteNote, navigation } = this.props;
     Alert.alert(
       'DELETE',
       'The note will be deleted',
       [
-        {text: 'Cancel', onPress: () => console.log('NOTE canceled')},
-        {text: 'Yes', onPress: () => console.log('Note Deleted')}
+        {text: 'Cancel'},
+        {text: 'Yes', onPress: () => deleteNote(navigation.state.params.note.id, noteState.notes)}
       ],
       {cancelable: true, cancelButtonTitle: 'Remove'}
     );
@@ -43,14 +62,14 @@ export class ViewNote extends Component {
    * Resets the note displayed on this screen after it was changed and
    * also scrolls the dashboard Screen to Top
    * @param note - the updated note
-   * @param canScrollTopAfterNoteUpdate - determines whether dashboard screen
+   * @param scrollToTopStatus - determines whether dashboard screen
    * should scroll to top after note is updated
    */
-  resetViewNoteScreenParam = (note, canScrollTopAfterNoteUpdate) => {
+  resetViewNoteScreenParam = (note, scrollToTopStatus) => {
     const { setParams, state } = this.props.navigation;
     setParams({ note });
 
-    if(canScrollTopAfterNoteUpdate) {
+    if(scrollToTopStatus) {
       state.params.scrollDashboardScreenToTop();
     }
   };
@@ -89,6 +108,15 @@ export class ViewNote extends Component {
     )
   }
 }
+
+const mapStateToProps = ({noteState}) => {
+  return { noteState }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ deleteNote, resetDeleteNoteStatus }, dispatch);
+};
+export const ViewNote = connect(mapStateToProps, mapDispatchToProps)(ViewNoteContainer);
 
 const styles = StyleSheet.create({
   container: {
