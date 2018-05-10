@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { ScrollView, View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { MenuIcon } from '../../common';
+import moment from 'moment';
 import { getNotes } from "../../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -14,23 +15,36 @@ class DashboardContainer extends Component {
     }
   };
 
+  scrollView = createRef();
+
   componentDidMount() {
+    console.log('Dashboard called');
     this.props.getNotes();
   }
 
   navigateToViewNoteScreen = (note) => {
-    this.props.navigation.navigate('ViewNote', { note });
-    // const resetAction = NavigationActions.reset({
-    //   index: 0,
-    //   actions: [NavigationActions.navigate({ routeName: 'ViewNote' })],
-    // });
-    //
-    // this.props.navigation.dispatch(resetAction);
+    this.props.navigation.navigate('ViewNote', {
+      note, scrollDashboardScreenToTop: this.scrollDashboardScreenToTop
+    });
+  };
+
+  scrollDashboardScreenToTop = () => {
+    this.scrollView.current.scrollTo({y: 0});
   };
 
   navigateToAddNoteScreen = () => {
     this.props.navigation.navigate('AddNote')
   };
+
+  formatNoteDate(date) {
+    const noteMomentDate = moment(date);
+
+    if(noteMomentDate.isSame(moment(), 'day')) {
+      return noteMomentDate.format('LT');
+    }
+
+    return noteMomentDate.format('llll')
+  }
 
   render(){
     return (
@@ -42,7 +56,7 @@ class DashboardContainer extends Component {
           </View>
         </View>
 
-        <ScrollView>
+        <ScrollView ref={this.scrollView}>
           {
             this.props.noteState.notes.map(note => (
               <TouchableHighlight key={note.id} onPress={() => this.navigateToViewNoteScreen(note)}>
@@ -55,7 +69,7 @@ class DashboardContainer extends Component {
                     <Text style={styles.noteText}>{note.body}</Text>
                     <View style={styles.noteFooterSection}>
                       <Text style={styles.footerText}>{note.category}</Text>
-                      <Text style={styles.noteTime}>9:15 AM</Text>
+                      <Text style={styles.noteTime}>{this.formatNoteDate(note.updated_at)}</Text>
                     </View>
                   </View>
                 </View>
@@ -148,6 +162,7 @@ const styles = StyleSheet.create({
   },
   noteTime: {
     color: '#9013FE',
+    fontSize: 12
   },
   footerText: {
     color: '#9013FE',

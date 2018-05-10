@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, View, StyleSheet} from 'react-native';
+import { MaterialIndicator } from 'react-native-indicators';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {authenticate} from "../../actions";
-import {setAuthorizationHeader} from "../../environment";
 
 class AppEntryContainer extends Component {
   static propTypes = {
@@ -28,7 +28,7 @@ class AppEntryContainer extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color={'white'} size={'large'}/>
+        <MaterialIndicator color={'white'} size={40}/>
       </View>
     )
   }

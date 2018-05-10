@@ -9,10 +9,12 @@
   "dependencies": {
     "axios": "^0.18.0",
     "key-mirror": "^1.0.1",
+    "moment": "^2.22.1",
     "prop-types": "^15.6.1",
     "react": "16.3.1",
     "react-native": "0.55.3",
     "react-native-image-picker": "^0.26.7",
+    "react-native-indicators": "^0.13.0",
     "react-native-tooltip": "^5.2.0",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^1.5.11",

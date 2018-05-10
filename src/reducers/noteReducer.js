@@ -7,6 +7,7 @@ const initialState = {
   saveNoteFailure: null,
   updateNoteValidationError: null,
   updatedNote: null,
+  canScrollTopAfterNoteUpdate: false,
   updateNoteFailure: null
 };
 
@@ -55,7 +56,8 @@ export const noteReducer = (state = initialState, action) => {
     case actionTypes.UPDATE_NOTE_SUCCESS:
       return {
         ...state,
-        updatedNote: action.payload,
+        updatedNote: action.payload.updatedNote,
+        canScrollTopAfterNoteUpdate: action.payload.canScrollTop,
         updateNoteValidationError: null
       };
     case actionTypes.UPDATE_NOTE_FAILURE:
@@ -73,6 +75,7 @@ export const noteReducer = (state = initialState, action) => {
     case actionTypes.CLEAR_UPDATED_NOTE:
       return {
         ...state,
+        canScrollTopAfterNoteUpdate: false,
         updatedNote: null,
         updateNoteValidationError: null,
         updateNoteFailure: null

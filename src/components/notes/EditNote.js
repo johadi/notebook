@@ -45,7 +45,12 @@ class EditNoteContainer extends Component {
   }
 
   componentDidUpdate() {
-    const { updateNoteValidationError, updateNoteFailure, updatedNote } = this.props.noteState;
+    const {
+      updateNoteValidationError,
+      updateNoteFailure,
+      updatedNote,
+      canScrollTopAfterNoteUpdate
+    } = this.props.noteState;
 
     if (updateNoteValidationError) {
       Alert.alert(
@@ -72,7 +77,8 @@ class EditNoteContainer extends Component {
     }
 
     if(updatedNote) {
-      this.props.navigation.state.params.resetViewNoteScreenParam(updatedNote);
+      this.props.navigation.state.params
+        .resetViewNoteScreenParam(updatedNote, canScrollTopAfterNoteUpdate);
       this.props.navigation.goBack();
     }
   }
@@ -108,7 +114,23 @@ class EditNoteContainer extends Component {
    */
   handleEditNote = () => {
     const { note, noteId } = this.state;
-    this.props.updateNote(note, noteId);
+    const { title, body, category } = note;
+
+    if(!title || !body || !category) {
+      Alert.alert(
+        'Note update failed',
+        'Your note must have a title and a body',
+        [
+          { text: 'OK', onPress: this.props.clearUpdateNoteErrors }
+        ]
+      );
+      return;
+    }
+
+    // Since array is passed by reference, Let us copy all the old notes thereby avoiding
+    // mutating the redux state. this makes our store remained pure.
+    const allOldNotes = [...this.props.noteState.notes];
+    this.props.updateNote(note, noteId, allOldNotes);
   };
 
   render() {

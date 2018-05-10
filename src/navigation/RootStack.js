@@ -24,9 +24,7 @@ const AppEntryStack = StackNavigator({
   },
 }, {
   navigationOptions: {
-    headerStyle: {
-      backgroundColor: '#9013FE',
-    }
+    header: null
   }
 });
 

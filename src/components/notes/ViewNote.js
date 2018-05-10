@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import moment from 'moment';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 export class ViewNote extends Component {
@@ -39,12 +40,21 @@ export class ViewNote extends Component {
   };
 
   /**
-   * Resets the note displayed on this screen after it was changed
-   * @param note
+   * Resets the note displayed on this screen after it was changed and
+   * also scrolls the dashboard Screen to Top
+   * @param note - the updated note
+   * @param canScrollTopAfterNoteUpdate - determines whether dashboard screen
+   * should scroll to top after note is updated
    */
-  resetViewNoteScreenParam = (note) => {
-    this.props.navigation.setParams({ note });
+  resetViewNoteScreenParam = (note, canScrollTopAfterNoteUpdate) => {
+    const { setParams, state } = this.props.navigation;
+    setParams({ note });
+
+    if(canScrollTopAfterNoteUpdate) {
+      state.params.scrollDashboardScreenToTop();
+    }
   };
+
 
   /**
    * Handles the navigation to EditNote screen
@@ -62,7 +72,7 @@ export class ViewNote extends Component {
       <View style={styles.container}>
         <View style={styles.noteHeader}>
           <Text style={styles.noteLabel}>{note.category} - </Text>
-          <Text style={styles.noteDate}>15th April, 2018</Text>
+          <Text style={styles.noteDate}>{moment(note.updated_at).format('LLLL')}</Text>
         </View>
         <View style={styles.divider}/>
         <View>
@@ -108,7 +118,7 @@ const styles = StyleSheet.create({
     color: '#9013FE'
   },
   noteDate: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#9013FE'
   },
   editIconSection: {
