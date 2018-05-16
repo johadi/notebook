@@ -52,7 +52,7 @@ class ViewNoteContainer extends Component {
       'The note will be deleted',
       [
         {text: 'Cancel'},
-        {text: 'Yes', onPress: () => deleteNote(navigation.state.params.note.id, noteState.notes)}
+        {text: 'Yes', onPress: () => deleteNote(navigation.state.params.note.id, [...noteState.notes])}
       ],
       {cancelable: true, cancelButtonTitle: 'Remove'}
     );

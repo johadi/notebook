@@ -82,7 +82,6 @@ export const noteReducer = (state = initialState, action) => {
         updateNoteValidationError: null,
         updateNoteFailure: null
       };
-
     case actionTypes.DELETE_NOTE_SUCCESS:
       return {
         ...state,

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Alert } from "react-native";
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { updateNote, clearUpdateNoteErrors, clearUpdatedNote } from '../../actions';
 import { CheckIcon, CreateNote } from '../../common'
-import { Alert } from "react-native";
 
 class EditNoteContainer extends Component {
   static propTypes = {

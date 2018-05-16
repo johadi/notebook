@@ -9,6 +9,7 @@ const initialState = {
   loginFailure: null,
   isAuthenticated: false,
   isAuthLoading: true,
+  userDetail: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -86,6 +87,7 @@ export const authReducer = (state = initialState, action) => {
     case actionTypes.AUTHENTICATE_SUCCESS:
       return {
         ...state,
+        userDetail: action.payload,
         isAuthLoading: false,
         isAuthenticated: true
       };

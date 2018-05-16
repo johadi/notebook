@@ -22,7 +22,8 @@ class LoginContainer extends Component {
     authState: PropTypes.object,
     navigation: PropTypes.object,
     clearLoginErrors: PropTypes.func,
-    login: PropTypes.func
+    login: PropTypes.func,
+    authenticate: PropTypes.func
   };
 
   tooltips = {
@@ -31,8 +32,15 @@ class LoginContainer extends Component {
   };
 
   async componentDidUpdate() {
-    if (this.props.authState.isAuthenticated && await setAuthorizationHeader()) {
+    const { isAuthenticated, userDetail } = this.props.authState;
+
+    if (isAuthenticated && await setAuthorizationHeader() && userDetail) {
       this.props.navigation.navigate('App');
+      return;
+    }
+
+    if (isAuthenticated && await setAuthorizationHeader()) {
+      this.props.authenticate();
     }
   }
 

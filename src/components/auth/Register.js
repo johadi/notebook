@@ -5,7 +5,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import ToolTip from 'react-native-tooltip';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
-import {register, clearRegistrationErrors} from '../../actions';
+import {register, clearRegistrationErrors, authenticate} from '../../actions';
 import { Input, Button } from '../../common';
 import { setAuthorizationHeader } from '../../environment';
 
@@ -24,7 +24,8 @@ export class RegisterContainer extends Component {
     authState: PropTypes.object,
     navigation: PropTypes.object,
     clearRegistrationErrors: PropTypes.func,
-    register: PropTypes.func
+    register: PropTypes.func,
+    authenticate: PropTypes.func,
   };
 
   tooltips = {
@@ -35,8 +36,15 @@ export class RegisterContainer extends Component {
   };
 
   async componentDidUpdate() {
-    if (this.props.authState.isAuthenticated && await setAuthorizationHeader()) {
+    const { isAuthenticated, userDetail } = this.props.authState;
+
+    if (isAuthenticated && await setAuthorizationHeader() && userDetail) {
       this.props.navigation.navigate('App');
+      return;
+    }
+
+    if (isAuthenticated && await setAuthorizationHeader()) {
+      this.props.authenticate();
     }
   }
 
@@ -188,7 +196,7 @@ const mapStateToProps = ({authState}) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({register, clearRegistrationErrors}, dispatch)
+  return bindActionCreators({register, clearRegistrationErrors, authenticate}, dispatch)
 };
 
 export const Register = connect(mapStateToProps, mapDispatchToProps)(RegisterContainer);

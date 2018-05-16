@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Input, Button, MenuIcon } from "../../common";
+import { View, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import { updateUser, resetUpdatedUserState, rerenderAppDrawer } from '../../actions';
+import { Input, Button, MenuIcon } from "../../common";
 
-export class Profile extends Component {
+class ProfileContainer extends Component {
   static navigationOptions = ({navigation}) => {
     return {
       title: 'Profile',
@@ -12,11 +15,51 @@ export class Profile extends Component {
   };
 
   state = {
-    avatarSource: require('../../../assets/images/jimoh.jpg')
+    selectedAvatarSource: null,
+    selectedFileName: null,
+    selectedFileUri: null,
+    userDetail: {
+      username: this.props.authState.userDetail.username,
+      avatarUri: null,
+    }
   };
 
-  handleUpdate = () => {
-    this.props.navigation.navigate('App');
+  componentDidUpdate() {
+    const {
+      updatedUser, updateUserFailure
+    } = this.props.userState || {};
+
+    if(updateUserFailure) {
+      Alert.alert('Profile Update failed',
+        updateUserFailure,
+        [{ text: 'OK', onPress: () => this.resetUserState() }]);
+    }
+
+    if(updatedUser) {
+      Alert.alert('Profile Update',
+        'Profile updated successfully', [
+        { text: 'OK', onPress: () => this.resetUserState() }
+      ]);
+    }
+  }
+
+  resetUserState = () => {
+    this.props.resetUpdatedUserState();
+    this.props.rerenderAppDrawer();
+  }
+
+  handleUpdate = async () => {
+    const { userDetail, selectedFileName, selectedFileUri } = this.state;
+    const formData = new FormData();
+    formData.append('username', userDetail.username);
+
+    if(selectedFileName) {
+      const fileExtension = selectedFileName.split('.').pop().toLowerCase();
+      const fileMimeType = `image/${fileExtension}`;
+      formData.append('avatar', { uri: selectedFileUri, name: selectedFileName, type: fileMimeType });
+    }
+
+    this.props.updateUser(formData);
   };
 
   showImagePicker = () => {
@@ -24,12 +67,8 @@ export class Profile extends Component {
     const options = {
       title: 'Select Avatar',
       customButtons: [
-        {name: 'fb', title: 'Choose Photo from Facebook'},
+        {name: 'fb', title: 'Choose Photo from Facebook'}
       ],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images'
-      }
     };
 
     /**
@@ -49,33 +88,65 @@ export class Profile extends Component {
         console.log('User tapped custom button: ', response.customButton);
       }
       else {
-        let source = { uri: response.uri };
-
+        const { uri, fileName } = response;
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
         this.setState({
-          avatarSource: source
+          selectedFileName: fileName,
+          selectedFileUri: uri,
+          selectedAvatarSource: {uri}
         });
       }
     });
   };
 
+  /**
+   * Shows the loader that indicates registration is in process
+   */
+  showLoader() {
+    return (
+      <ActivityIndicator size={0} color={'#fff'}/>
+    );
+  }
+
+  handleTextChange = (value, key) => {
+    const { userDetail } = this.state;
+    userDetail[key] = value;
+    this.setState({ userDetail });
+  }
   render() {
+    const { updateUserIsLoading } = this.props.userState || {};
+    const { avatar_path } = this.props.authState.userDetail;
+    const userAvatar = avatar_path ? { uri: avatar_path } : require('../../../assets/images/jimoh.jpg');
+    const { userDetail, selectedAvatarSource } = this.state;
+
     return (
       <View style={styles.container}>
         <View style={styles.imageWrapper}>
           <TouchableOpacity onPress={this.showImagePicker}>
-            <Image style={styles.headerText} source={this.state.avatarSource}/>
+            <Image style={styles.headerText} source={selectedAvatarSource ? selectedAvatarSource : userAvatar}/>
             <Image style={styles.editImageIcon} source={require('../../../assets/images/imageediticon.png')}/>
           </TouchableOpacity>
         </View>
-        <Input placeholder={'Username'}/>
-        <Button onPress={this.handleUpdate}>Update Details</Button>
+        <Input
+          onChangeText={(value) => this.handleTextChange(value, 'username')}
+          placeholder={'Username'}
+          value={userDetail.username}
+        />
+        <Button onPress={this.handleUpdate}>{updateUserIsLoading ? this.showLoader() : 'Update Details'}</Button>
       </View>
     )
   }
 }
+
+const mapStateToProps = ({userState, authState}) => {
+  return { userState, authState }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ updateUser, resetUpdatedUserState, rerenderAppDrawer }, dispatch);
+};
+export const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileContainer);
 
 const styles = StyleSheet.create({
   container: {

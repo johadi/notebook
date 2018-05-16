@@ -3,7 +3,8 @@ import moment from 'moment';
 import actionTypes from '../actionTypes';
 import environment from '../environment';
 
-const { apiUrl } = environment;
+
+const {apiUrl} = environment;
 
 /**
  * Action creator for getting notes
@@ -28,7 +29,7 @@ export const saveNote = note => (dispatch) => {
     })
     .catch(err => {
 
-      if(err.response.status === 400) {
+      if (err.response.status === 400) {
         return dispatchAction(actionTypes.SAVE_NOTE_VALIDATION_ERROR, err.response.data, dispatch);
       }
 
@@ -69,14 +70,14 @@ export const updateNote = (note, id, allOldNotes) => (dispatch) => {
       updateAllOldNotes(response.data, allOldNotes, dispatch);
     })
     .catch(err => {
-      const { status } = err.response || {};
+      const {status} = err.response || {};
       let error = 'Internal Server error, try again';
 
-      if(status === 400) {
+      if (status === 400) {
         return dispatchAction(actionTypes.UPDATE_NOTE_VALIDATION_ERROR, err.response.data, dispatch);
       }
 
-      if(status === 404) {
+      if (status === 404) {
         error = err.response.data;
       }
 
@@ -104,7 +105,7 @@ const updateAllOldNotes = (updatedNote, allOldNotes, dispatch) => {
 
   dispatchAction(actionTypes.GET_NOTES_SUCCESS, allOldNotes, dispatch);
   // sends a signal that a note was updated
-  dispatchAction(actionTypes.UPDATE_NOTE_SUCCESS, { updatedNote, scrollToTopStatus }, dispatch);
+  dispatchAction(actionTypes.UPDATE_NOTE_SUCCESS, {updatedNote, scrollToTopStatus}, dispatch);
 };
 
 /**

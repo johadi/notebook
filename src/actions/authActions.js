@@ -104,8 +104,8 @@ export const authenticate = () => async (dispatch) => {
 
   axios.get(`${apiUrl}/user`)
     .then(response => {
-      if(response.status === 200) {
-        return dispatchAction(actionTypes.AUTHENTICATE_SUCCESS, null, dispatch);
+      if(response.status === 200 && response.data) {
+        return dispatchAction(actionTypes.AUTHENTICATE_SUCCESS, response.data, dispatch);
       }
 
       return Promise.reject();

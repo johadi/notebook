@@ -47,12 +47,15 @@ class DashboardContainer extends Component {
   }
 
   render(){
+    const { username, avatar_path } = this.props.authState.userDetail || {};
+    const defaultAvatar = require('../../../assets/images/jimoh.jpg');
+
     return (
       <View style={styles.container}>
         <View style={styles.userSection}>
           <View style={styles.imageWrapper}>
-            <Image style={styles.image} source={require('../../../assets/images/jimoh.jpg')}/>
-            <Text style={styles.userSectionText}>Johadi</Text>
+            <Image style={styles.image} source={avatar_path ? { uri: avatar_path } : defaultAvatar}/>
+            <Text style={styles.userSectionText}>{username}</Text>
           </View>
         </View>
 
@@ -66,7 +69,7 @@ class DashboardContainer extends Component {
                       <Text style={styles.noteHeaderText}>{note.title}</Text>
                       <Image style={styles.indicator} source={require('../../../assets/images/indicator3x.png')} />
                     </View>
-                    <Text style={styles.noteText}>{note.body}</Text>
+                    <Text style={styles.noteText} numberOfLines={1}>{note.body}</Text>
                     <View style={styles.noteFooterSection}>
                       <Text style={styles.footerText}>{note.category}</Text>
                       <Text style={styles.noteTime}>{this.formatNoteDate(note.updated_at)}</Text>
@@ -86,8 +89,8 @@ class DashboardContainer extends Component {
   }
 }
 
-const mapStateToProps = ({noteState}) => {
-  return { noteState }
+const mapStateToProps = ({noteState, authState}) => {
+  return { noteState, authState }
 };
 
 const mapDispatchToProps = (dispatch) => {
