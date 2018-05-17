@@ -1,13 +1,13 @@
-import React, { Component, createRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Platform } from 'react-native';
+import React, {Component, createRef} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Platform, KeyboardAvoidingView} from 'react-native';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import ToolTip from 'react-native-tooltip';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Input, Button } from '../../common';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {Input, Button} from '../../common';
 import {clearLoginErrors, login, authenticate} from '../../actions';
-import { setAuthorizationHeader } from '../../environment';
+import {setAuthorizationHeader} from '../../environment';
 
 class LoginContainer extends Component {
   state = {
@@ -32,7 +32,7 @@ class LoginContainer extends Component {
   };
 
   async componentDidUpdate() {
-    const { isAuthenticated, userDetail } = this.props.authState;
+    const {isAuthenticated, userDetail} = this.props.authState;
 
     if (isAuthenticated && await setAuthorizationHeader() && userDetail) {
       this.props.navigation.navigate('App');
@@ -68,7 +68,7 @@ class LoginContainer extends Component {
    */
   showLoader() {
     return (
-      <ActivityIndicator size={0} color={'#fff'}/>
+      <ActivityIndicator color={'white'}/>
     );
   }
 
@@ -110,8 +110,8 @@ class LoginContainer extends Component {
    * @return {jsx}
    */
   showErrorIcon(iconStyle, errorMessage, iconCategoryName) {
-    return (
-      <TouchableOpacity onPress = {() => this.showErrorIconTooltipText(iconCategoryName)}>
+    return Platform.OS === 'ios' ? (
+      <TouchableOpacity onPress={() => this.showErrorIconTooltipText(iconCategoryName)}>
         <ToolTip
           ref={this.tooltips[iconCategoryName]}
           actions={[
@@ -121,7 +121,8 @@ class LoginContainer extends Component {
           <FontAwesomeIcon style={iconStyle} color={'red'} size={20} name={'exclamation-circle'}/>
         </ToolTip>
       </TouchableOpacity>
-    )
+    ) :
+      <FontAwesomeIcon style={iconStyle} color={'red'} size={20} name={'exclamation-circle'}/>
   }
 
   /**
@@ -142,35 +143,40 @@ class LoginContainer extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.headerText}>Notebook</Text>
-        {this.showLoginFailureMessage(loginFailure)}
-        <Input
-          placeholder={'Email'}
-          icon={loginValidationErrors['email'] ?
-            iconStyle => this.showErrorIcon(iconStyle,
-              loginValidationErrors['email'][0], 'email') : null}
-          onChangeText={value => this.handleChangeText('email', value)}
-        />
-        {this.showValidationErrorMessage(loginValidationErrors['email'])}
-        <Input
-          placeholder={'Password'}
-          icon={loginValidationErrors['password'] ?
-            iconStyle => this.showErrorIcon(iconStyle,
-              loginValidationErrors['password'][0], 'password') : null}
-          onChangeText={value => this.handleChangeText('password', value)}
-        />
-        {this.showValidationErrorMessage(loginValidationErrors['password'])}
-        <Button onPress={this.handleLogin}>{loginIsLoading ? this.showLoader() : 'Login'}</Button>
-        <View style={styles.forgotPasswordWrapper}>
-          <Text
-            onPress={() => this.handleNavigation('RecoverPassword')}
-            style={styles.forgotPasswordText}>
-            Forgot Password?
-          </Text>
-          <Text
-            onPress={() => this.handleNavigation('Register')}
-            style={styles.forgotPasswordText}>
-            Register
-          </Text>
+        <View style={styles.formWrapper}>
+          {this.showLoginFailureMessage(loginFailure)}
+          <Input
+            placeholder={'Email'}
+            icon={loginValidationErrors['email'] ?
+              iconStyle => this.showErrorIcon(iconStyle,
+                loginValidationErrors['email'][0], 'email') : null}
+            onChangeText={value => this.handleChangeText('email', value)}
+          />
+          {this.showValidationErrorMessage(loginValidationErrors['email'])}
+          <Input
+            placeholder={'Password'}
+            secureTextEntry={true}
+            icon={loginValidationErrors['password'] ?
+              iconStyle => this.showErrorIcon(iconStyle,
+                loginValidationErrors['password'][0], 'password') : null}
+            onChangeText={value => this.handleChangeText('password', value)}
+          />
+          {this.showValidationErrorMessage(loginValidationErrors['password'])}
+          <Button onPress={this.handleLogin}>{loginIsLoading ?
+            this.showLoader() : <Text style={styles.buttonText}>Login</Text>}
+          </Button>
+          <View style={styles.forgotPasswordWrapper}>
+            <Text
+              onPress={() => this.handleNavigation('RecoverPassword')}
+              style={styles.forgotPasswordText}>
+              Forgot Password?
+            </Text>
+            <Text
+              onPress={() => this.handleNavigation('Register')}
+              style={styles.forgotPasswordText}>
+              Register
+            </Text>
+          </View>
         </View>
       </View>
     );
@@ -178,11 +184,11 @@ class LoginContainer extends Component {
 }
 
 const mapStateToProps = ({authState}) => {
-  return { authState }
+  return {authState}
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ clearLoginErrors, login, authenticate }, dispatch);
+  return bindActionCreators({clearLoginErrors, login, authenticate}, dispatch);
 };
 export const Login = connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
 
@@ -213,5 +219,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'red',
     marginBottom: 5
+  },
+  buttonText: {
+    fontSize: 18,
+    paddingVertical: 3,
+    color: '#fff'
+  },
+  formWrapper: {
+
   }
 });

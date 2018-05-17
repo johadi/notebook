@@ -1,10 +1,11 @@
 import React, { Component, createRef } from 'react';
 import { ScrollView, View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
-import { MenuIcon } from '../../common';
-import moment from 'moment';
-import { getNotes } from "../../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import moment from 'moment';
+import { MenuIcon } from '../../common';
+import { getNotes } from "../../actions";
+import environment from '../../environment';
 
 class DashboardContainer extends Component {
 
@@ -49,12 +50,14 @@ class DashboardContainer extends Component {
   render(){
     const { username, avatar_path } = this.props.authState.userDetail || {};
     const defaultAvatar = require('../../../assets/images/jimoh.jpg');
+    const {baseUrl} = environment;
 
     return (
       <View style={styles.container}>
         <View style={styles.userSection}>
           <View style={styles.imageWrapper}>
-            <Image style={styles.image} source={avatar_path ? { uri: avatar_path } : defaultAvatar}/>
+            <Image style={styles.image} source={avatar_path ?
+              { uri: `${baseUrl}/${avatar_path}` } : defaultAvatar}/>
             <Text style={styles.userSectionText}>{username}</Text>
           </View>
         </View>

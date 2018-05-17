@@ -5,12 +5,15 @@ export const Button = ({children, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <Text style={styles.text}>{children}</Text>
+        {renderChildren(children)}
       </View>
     </TouchableOpacity>
   )
 };
 
+const renderChildren = (children) => {
+  return typeof children === 'string' ? <Text style={styles.text}>{children}</Text> : children
+}
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
