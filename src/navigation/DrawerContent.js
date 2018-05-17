@@ -3,12 +3,10 @@ import {StyleSheet, ScrollView, View, Image, Text} from "react-native";
 import { DrawerItems, SafeAreaView } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import environment from '../environment';
 
 class DrawerContentContainer extends Component {
   render() {
     const { avatar_path, username, email } = this.props.userDetail || {};
-    const { baseUrl } = environment;
 
     return this.props.renderDrawerStatus && (
       <ScrollView>

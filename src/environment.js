@@ -12,14 +12,19 @@ export const setAuthorizationHeader = async () => {
   return false;
 };
 
-export default Platform.select({
+const appUrls = __DEV__? Platform.select({
   ios: {
     apiUrl: 'http://localhost:8000/api',
     baseUrl: 'http://localhost:8000'
   },
   android: {
-    // apiUrl: 'http://192.168.8.100:8000/api'
     apiUrl: 'http://10.0.2.2:8000/api',
     baseUrl: 'http://10.0.2.2:8000'
   }
-})
+}) :
+  {
+    apiUrl: 'https://jim-notebook-server.herokuapp.com/api',
+    baseUrl: 'https://jim-notebook-server.herokuapp.com'
+  };
+
+export default appUrls;
