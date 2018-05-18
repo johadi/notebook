@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import ToolTip from 'react-native-tooltip';
@@ -75,7 +75,7 @@ export class RegisterContainer extends Component {
    */
   showLoader() {
     return (
-      <ActivityIndicator size={0} color={'#fff'}/>
+      <ActivityIndicator color={'#fff'}/>
     );
   }
 
@@ -117,7 +117,7 @@ export class RegisterContainer extends Component {
    * @return {jsx}
    */
   showErrorIcon(iconStyle, errorMessage, iconCategoryName) {
-   return (
+   return Platform.OS === 'ios' ? (
      <TouchableOpacity onPress = {() => this.showErrorIconTooltipText(iconCategoryName)}>
        <ToolTip
          ref={this.tooltips[iconCategoryName]}
@@ -128,7 +128,8 @@ export class RegisterContainer extends Component {
          <FontAwesomeIcon style={iconStyle} color={'red'} size={20} name={'exclamation-circle'}/>
        </ToolTip>
      </TouchableOpacity>
-   )
+   ) :
+     <FontAwesomeIcon style={iconStyle} color={'red'} size={20} name={'exclamation-circle'}/>
   }
 
   /**
@@ -166,6 +167,7 @@ export class RegisterContainer extends Component {
 
         <Input
           placeholder={'Password'}
+          secureTextEntry={true}
           icon={registrationValidationErrors['password'] ?
             iconStyle => this.showErrorIcon(
               iconStyle, registrationValidationErrors['password'][0], 'password') : null}
@@ -174,6 +176,7 @@ export class RegisterContainer extends Component {
 
         <Input
           placeholder={'Confirm Password'}
+          secureTextEntry={true}
           icon={registrationValidationErrors['password_confirmation'] ?
             iconStyle => this.showErrorIcon(
               iconStyle, registrationValidationErrors['password_confirmation'][0],

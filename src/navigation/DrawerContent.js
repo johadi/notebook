@@ -3,18 +3,19 @@ import {StyleSheet, ScrollView, View, Image, Text} from "react-native";
 import { DrawerItems, SafeAreaView } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {cancelAppDrawerRerender} from '../actions';
+import environment from '../environment';
 
 class DrawerContentContainer extends Component {
   render() {
     const { avatar_path, username, email } = this.props.userDetail || {};
+    const { baseUrl } = environment;
 
     return this.props.renderDrawerStatus && (
       <ScrollView>
         <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
           <View style={styles.drawerHeader}>
             <Image style={styles.headerImage} source={avatar_path ?
-              {uri: avatar_path} : require('../../assets/images/jimoh.jpg')}/>
+              {uri: `${baseUrl}/${avatar_path}`} : require('../../assets/images/jimoh.jpg')}/>
             <View style={styles.headerUserDetailWrapper}>
               <Text style={styles.headerUserDetailText}>{username}</Text>
               <Text style={styles.headerUserDetailText}>{email}</Text>
@@ -34,11 +35,7 @@ const mapStateToProps = ({authState, userState}) => {
   }
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ cancelAppDrawerRerender }, dispatch);
-};
-
-export const DrawerContent = connect(mapStateToProps, mapDispatchToProps)(DrawerContentContainer);
+export const DrawerContent = connect(mapStateToProps)(DrawerContentContainer);
 
 const styles = StyleSheet.create({
   container: {

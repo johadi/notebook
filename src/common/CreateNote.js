@@ -22,6 +22,7 @@ export const CreateNote = (props) => {
             multiline={true}
             autoFocus={true}
             autoCorrect={false}
+            underlineColorAndroid = 'transparent'
             placeholder={'Type your note title'}/>
           <TextInput
             onChangeText = {handleBodyInputChange}
@@ -29,6 +30,7 @@ export const CreateNote = (props) => {
             style={styles.input}
             multiline={true}
             autoCorrect={false}
+            underlineColorAndroid = 'transparent'
             placeholder={'Type your note body'}/>
         </View>
 

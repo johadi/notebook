@@ -65,7 +65,7 @@ export const login = userCredentials => dispatch => {
       }
     })
     .catch(err => {
-      if(err.response.status === 404) {
+      if(err && err.response.status === 404) {
         return dispatchAction(actionTypes.LOGIN_FAILURE, err.response.data, dispatch);
       }
 

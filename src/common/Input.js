@@ -5,7 +5,10 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 const Input = ({style,icon, ...rest}) => {
   return (
     <View style={styles.inputWrapper}>
-      <TextInput autoCorrect={false} style={[styles.input, style]} {...rest}/>
+      <TextInput
+        underlineColorAndroid = 'transparent'
+        autoCorrect={false}
+        style={[styles.input, style]} {...rest}/>
       {icon ? icon(styles.iconStyle) : null}
     </View>
   )
