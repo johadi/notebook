@@ -1,4 +1,3 @@
-import {AsyncStorage} from 'react-native'
 import axios from 'axios';
 import actionTypes from '../actionTypes';
 import environment from '../environment';
@@ -29,7 +28,11 @@ export const updateUser = (userDetail) => (dispatch) => {
       const { data, status } = err.response;
 
       if(status === 400 || status === 422 || status === 409) {
-        return dispatchAction(actionTypes.UPDATE_USER_FAILURE, data, dispatch);
+        return dispatchAction(
+          actionTypes.UPDATE_USER_FAILURE,
+          data['avatar'] ? data['avatar'].toString() : data,
+          dispatch
+        );
       }
 
       dispatchAction(actionTypes.UPDATE_USER_FAILURE, 'Server error. Try again', dispatch);
