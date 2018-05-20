@@ -13,7 +13,7 @@ class DrawerContentContainer extends Component {
         <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
           <View style={styles.drawerHeader}>
             <Image style={styles.headerImage} source={avatar_path ?
-              {uri: `${baseUrl}/${avatar_path}`} : require('../../assets/images/jimoh.jpg')}/>
+              {uri: avatar_path} : require('../../assets/images/jimoh.jpg')}/>
             <View style={styles.headerUserDetailWrapper}>
               <Text style={styles.headerUserDetailText}>{username}</Text>
               <Text style={styles.headerUserDetailText}>{email}</Text>

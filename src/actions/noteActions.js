@@ -10,11 +10,52 @@ const {apiUrl} = environment;
  * Action creator for getting notes
  * @return {Function}
  */
-export const getNotes = () => dispatch => {
+export const getNotes = (nextPage = 1, currentNotes = []) => dispatch => {
+  updateLoadMoreStatus(true, dispatch);
+  axios.get(`${apiUrl}/notes?page=${nextPage}`)
+    .then(response => {
+      updateLoadMoreStatus(false, dispatch);
+      // responseData = {data, current_page, ...}
+      let responseData =  response.data;
+
+      if(responseData.current_page > 1) {
+        responseData.data = [...currentNotes, ...responseData.data]
+      }
+
+      dispatchAction(actionTypes.GET_NOTES_SUCCESS, {data: responseData.data, metaData: responseData}, dispatch);
+    })
+};
+
+/**
+ * Action creator for getting notes
+ * @return {Function}
+ */
+export const updateLoadMoreStatus = (status, dispatch) => {
+  dispatchAction(actionTypes.UPDATE_LOAD_MORE_NOTES_STATUS, status, dispatch);
+};
+
+/**
+ * Action creator for getting notes by refresh
+ * @return {Function}
+ */
+export const getNotesByRefresh = () => dispatch => {
+  updateRefreshStatus(true, dispatch);
   axios.get(`${apiUrl}/notes`)
     .then(response => {
-      dispatchAction(actionTypes.GET_NOTES_SUCCESS, response.data, dispatch);
+      // responseData = {data, current_page, ...}
+      let responseData =  response.data;
+
+      dispatchAction(actionTypes.GET_NOTES_SUCCESS, {data: responseData.data, metaData: responseData}, dispatch);
+      updateRefreshStatus(false, dispatch);
     })
+};
+
+/**
+ * Action creator for getting notes
+ * @return {Function}
+ */
+export const updateRefreshStatus = (status, dispatch) => {
+  dispatchAction(actionTypes.UPDATE_REFRESH_NOTES_STATUS, status, dispatch);
 };
 
 /**
@@ -103,7 +144,7 @@ const updateAllOldNotes = (updatedNote, allOldNotes, dispatch) => {
     allOldNotes.splice(updatedNoteIndex, 1, updatedNote); // Remove old note and replace with updated one
   }
 
-  dispatchAction(actionTypes.GET_NOTES_SUCCESS, allOldNotes, dispatch);
+  dispatchAction(actionTypes.GET_NOTES_SUCCESS, {data: allOldNotes}, dispatch);
   // sends a signal that a note was updated
   dispatchAction(actionTypes.UPDATE_NOTE_SUCCESS, {updatedNote, scrollToTopStatus}, dispatch);
 };
@@ -135,7 +176,7 @@ export const deleteNote = (id, allOldNotes) => (dispatch) => (
     .then(() => {
       const deletedNoteIndex = getNoteIndex(id, allOldNotes);
       allOldNotes.splice(deletedNoteIndex, 1);
-      dispatchAction(actionTypes.GET_NOTES_SUCCESS, allOldNotes, dispatch);
+      dispatchAction(actionTypes.GET_NOTES_SUCCESS, {data: allOldNotes}, dispatch);
       dispatchAction(actionTypes.DELETE_NOTE_SUCCESS, null, dispatch);
     })
     .catch(err => {
