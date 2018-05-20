@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { updateUser, resetUpdatedUserState, rerenderAppDrawer } from '../../actions';
 import { Input, Button, MenuIcon } from "../../common";
-import environment from '../../environment';
 
 class ProfileContainer extends Component {
   static navigationOptions = ({navigation}) => {
@@ -117,9 +116,8 @@ class ProfileContainer extends Component {
   }
   render() {
     const { updateUserIsLoading } = this.props.userState || {};
-    const { baseUrl } = environment;
     const { avatar_path } = this.props.authState.userDetail;
-    const userAvatar = avatar_path ? { uri: `${baseUrl}/${avatar_path}` } : require('../../../assets/images/jimoh.jpg');
+    const userAvatar = avatar_path ? { uri: avatar_path } : require('../../../assets/images/jimoh.jpg');
     const { userDetail, selectedAvatarSource } = this.state;
 
     return (

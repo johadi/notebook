@@ -1,10 +1,10 @@
 import React, { Component, createRef } from 'react';
-import { ScrollView, View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Image, StyleSheet, TouchableHighlight, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import moment from 'moment';
 import { MenuIcon } from '../../common';
-import { getNotes } from "../../actions";
+import { getNotes, updateLoadMoreStatus, getNotesByRefresh } from "../../actions";
 
 class DashboardContainer extends Component {
 
@@ -15,10 +15,13 @@ class DashboardContainer extends Component {
     }
   };
 
-  scrollView = createRef();
+  state = {
+    refreshing: false
+  };
+
+  flatList = createRef();
 
   componentDidMount() {
-    console.log('Dashboard called');
     this.props.getNotes();
   }
 
@@ -29,7 +32,7 @@ class DashboardContainer extends Component {
   };
 
   scrollDashboardScreenToTop = () => {
-    this.scrollView.current.scrollTo({y: 0});
+    this.flatList.current.scrollToIndex({index: 0});
   };
 
   navigateToAddNoteScreen = () => {
@@ -46,9 +49,28 @@ class DashboardContainer extends Component {
     return noteMomentDate.format('llll')
   }
 
+  handleLoadMore = () => {
+    const { isLoadingMoreNotes, perPageNotesAndMetaData, notes } = this.props.noteState;
+    const { current_page, next_page_url } = perPageNotesAndMetaData;
+
+    if(next_page_url && !isLoadingMoreNotes) {
+      this.props.getNotes(current_page + 1, [...notes]);
+    }
+  }
+
+  handleRefresh = () => {
+    this.props.getNotesByRefresh();
+  }
+
+  renderFooter = () => {
+    const { isLoadingMoreNotes } = this.props.noteState;
+    return isLoadingMoreNotes ? <ActivityIndicator size={'large'}/> : null
+  }
+
   render(){
     const { username, avatar_path } = this.props.authState.userDetail || {};
     const defaultAvatar = require('../../../assets/images/jimoh.jpg');
+    const { isRefreshingNotes, notes } = this.props.noteState;
 
     return (
       <View style={styles.container}>
@@ -60,27 +82,33 @@ class DashboardContainer extends Component {
           </View>
         </View>
 
-        <ScrollView ref={this.scrollView}>
-          {
-            this.props.noteState.notes.map(note => (
-              <TouchableHighlight key={note.id} onPress={() => this.navigateToViewNoteScreen(note)}>
-                <View style={styles.notesSection}>
-                  <View style={styles.singleNoteSection}>
-                    <View style={styles.noteHeaderSection}>
-                      <Text style={styles.noteHeaderText}>{note.title}</Text>
-                      <Image style={styles.indicator} source={require('../../../assets/images/indicator3x.png')} />
-                    </View>
-                    <Text style={styles.noteText} numberOfLines={1}>{note.body}</Text>
-                    <View style={styles.noteFooterSection}>
-                      <Text style={styles.footerText}>{note.category}</Text>
-                      <Text style={styles.noteTime}>{this.formatNoteDate(note.updated_at)}</Text>
-                    </View>
+        <FlatList
+          ref={this.flatList}
+          keyExtractor={(item) => item.id.toString()}
+          data={notes}
+          onEndReached={() => this.handleLoadMore()}
+          onEndReachedThreshold={0}
+          refreshing={isRefreshingNotes}
+          onRefresh={this.handleRefresh}
+          renderItem={({item})=>(
+            <TouchableHighlight onPress={() => this.navigateToViewNoteScreen(item)}>
+              <View style={styles.notesSection}>
+                <View style={styles.singleNoteSection}>
+                  <View style={styles.noteHeaderSection}>
+                    <Text style={styles.noteHeaderText}>{item.title}</Text>
+                    <Image style={styles.indicator} source={require('../../../assets/images/indicator3x.png')} />
+                  </View>
+                  <Text style={styles.noteText} numberOfLines={1}>{item.body}</Text>
+                  <View style={styles.noteFooterSection}>
+                    <Text style={styles.footerText}>{item.category}</Text>
+                    <Text style={styles.noteTime}>{this.formatNoteDate(item.updated_at)}</Text>
                   </View>
                 </View>
-              </TouchableHighlight>
-            ))
-          }
-        </ScrollView>
+              </View>
+            </TouchableHighlight>
+          )}
+          ListFooterComponent={this.renderFooter}
+        />
         <TouchableOpacity onPress={this.navigateToAddNoteScreen} style={styles.addNoteIcon}>
           <Text style={styles.addNoteIconText}>+</Text>
         </TouchableOpacity>
@@ -95,7 +123,7 @@ const mapStateToProps = ({noteState, authState}) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ getNotes }, dispatch);
+  return bindActionCreators({ getNotes, updateLoadMoreStatus, getNotesByRefresh }, dispatch);
 };
 export const Dashboard = connect(mapStateToProps, mapDispatchToProps)(DashboardContainer);
 

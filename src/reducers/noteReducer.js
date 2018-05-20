@@ -11,6 +11,9 @@ const initialState = {
   updateNoteFailure: null,
   deletedNoteStatus: false,
   deleteNoteError: null,
+  perPageNotesAndMetaData: null,
+  isLoadingMoreNotes: false,
+  isRefreshingNotes: false,
 };
 
 export const noteReducer = (state = initialState, action) => {
@@ -18,7 +21,18 @@ export const noteReducer = (state = initialState, action) => {
     case actionTypes.GET_NOTES_SUCCESS:
       return {
         ...state,
-        notes: action.payload
+        notes: action.payload.data,
+        perPageNotesAndMetaData: action.payload.metaData ? action.payload.metaData : state.perPageNotesAndMetaData
+      };
+    case actionTypes.UPDATE_REFRESH_NOTES_STATUS:
+      return {
+        ...state,
+        isRefreshingNotes: action.payload
+      };
+    case actionTypes.UPDATE_LOAD_MORE_NOTES_STATUS:
+      return {
+        ...state,
+        isLoadingMoreNotes: action.payload
       };
     case actionTypes.SAVE_NOTE_VALIDATION_ERROR:
       return {
