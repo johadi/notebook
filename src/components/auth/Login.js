@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'BradleyHandITCTT-Bold',
     fontSize: 48,
-    color: '#9013FE',
+    color: '#092035',
   },
   forgotPasswordWrapper: {
     marginHorizontal: 15,
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   forgotPasswordText: {
-    color: '#9013FE',
+    color: '#092035',
     fontWeight: 'bold',
     fontSize: 14
   },

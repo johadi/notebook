@@ -1,5 +1,5 @@
 import { AppRegistry, YellowBox } from 'react-native';
-import App from './src/App';
+import App from './App';
 import './ReactotronConfig'
 
 console.ignoredYellowBox = ['Remote debugger'];
