@@ -14,7 +14,7 @@
 - Redux
 ### Installation
 - Clone this repository
-- Change into this project directory `cd notebook-server`
+- Change into this project directory `cd notebook`
 - Install the packages `npm install`
 - Start the application: If you have your ios simulator or android emulator set up, 
 run `react-native run-ios` or `react-native run-android`.

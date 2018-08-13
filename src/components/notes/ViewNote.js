@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   noteHeaderText: {
     textAlign: 'center',
-    color: '#9013FE',
+    color: '#092035',
     fontSize: 15,
     marginVertical: 8
   },
@@ -143,15 +143,15 @@ const styles = StyleSheet.create({
   noteLabel: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#9013FE'
+    color: '#092035'
   },
   noteDate: {
     fontSize: 12,
-    color: '#9013FE'
+    color: '#092035'
   },
   editIconSection: {
     position: 'absolute',
-    backgroundColor: '#9013FE',
+    backgroundColor: '#092035',
     height: 60,
     width: 60,
     borderRadius: 30,

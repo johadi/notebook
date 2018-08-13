@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { RootStack } from "./navigation";
+import { RootStack } from "./src/navigation/index";
 import { Provider } from 'react-redux';
-import store from './store';
+import store from './src/store/index';
 
 type Props = {};
 export default class App extends Component<Props> {

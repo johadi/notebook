@@ -10,13 +10,9 @@ class DashboardContainer extends Component {
 
   static navigationOptions = ({navigation}) => {
     return {
-      title: 'Dashboard',
+      title: 'Noteboard',
       headerLeft: <MenuIcon navigation={navigation}/>
     }
-  };
-
-  state = {
-    refreshing: false
   };
 
   flatList = createRef();
@@ -87,7 +83,7 @@ class DashboardContainer extends Component {
           keyExtractor={(item) => item.id.toString()}
           data={notes}
           onEndReached={() => this.handleLoadMore()}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={0.01}
           refreshing={isRefreshingNotes}
           onRefresh={this.handleRefresh}
           renderItem={({item})=>(
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#9013FE'
+    borderColor: '#092035'
   },
   userSection: {
     flexDirection: 'row',
@@ -157,7 +153,7 @@ const styles = StyleSheet.create({
   },
   userSectionText: {
     marginHorizontal: 8,
-    color: '#9013FE',
+    color: '#092035',
     fontSize: 14,
     fontWeight: 'bold'
   },
@@ -172,7 +168,7 @@ const styles = StyleSheet.create({
   },
   noteHeaderText: {
     fontSize: 15,
-    color: '#9013FE'
+    color: '#092035'
   },
   noteText: {
     color: '#8F8E94',
@@ -193,17 +189,17 @@ const styles = StyleSheet.create({
     marginRight: 15
   },
   noteTime: {
-    color: '#9013FE',
+    color: '#092035',
     fontSize: 12
   },
   footerText: {
-    color: '#9013FE',
+    color: '#092035',
     fontSize: 12,
     fontWeight: 'bold'
   },
   addNoteIcon: {
     position: 'absolute',
-    backgroundColor: '#9013FE',
+    backgroundColor: '#092035',
     height: 60,
     width: 60,
     borderRadius: 30,

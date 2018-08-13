@@ -40,7 +40,7 @@ const AuthStack = StackNavigator({
   },
 }, {
   navigationOptions: {
-    headerTintColor: '#9013FE'
+    headerTintColor: '#092035'
   }
 });
 
@@ -62,7 +62,7 @@ const AppStack = StackNavigator({
     navigationOptions: {
       headerTintColor: '#ffffff',
       headerStyle: {
-        backgroundColor: '#9013FE'
+        backgroundColor: '#092035'
       },
       headerBackTitle: null
     }
@@ -77,7 +77,7 @@ const ProfileStack = StackNavigator({
     navigationOptions: {
       headerTintColor: '#ffffff',
       headerStyle: {
-        backgroundColor: '#9013FE'
+        backgroundColor: '#092035'
       }
     }
   });
@@ -103,9 +103,9 @@ const AppDrawer = DrawerNavigator({
   }
 }, {
   contentComponent: DrawerContent,
-  drawerBackgroundColor: '#9013FE',
+  drawerBackgroundColor: '#092035',
   contentOptions: {
-    activeTintColor: '#9013FE',
+    activeTintColor: '#092035',
     inactiveTintColor: '#fff',
     activeBackgroundColor: '#fff',
   }

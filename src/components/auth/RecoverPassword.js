@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'BradleyHandITCTT-Bold',
     fontSize: 48,
-    color: '#9013FE',
+    color: '#092035',
   },
 });
