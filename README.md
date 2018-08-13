@@ -25,7 +25,7 @@ Checkout this react native [guide](https://facebook.github.io/react-native/docs/
 ### Note
 This project makes use of an API I built for handling notes:
 - Heroku link [https://jim-notebook-server.herokuapp.com/api](https://jim-notebook-server.herokuapp.com/api)
-- Github link [https://github.com/johadi10/notebook-server](https://github.com/johadi10/notebook-server)
+- Github link [https://github.com/johadi/notebook-server](https://github.com/johadi/notebook-server)
 
 ### Contribution
 - I appreciate. Raise your PR against the staging branch.
